@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { login } from "../actions/user";
 import { mobile } from "../responsive";
+import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -57,7 +58,7 @@ const Button = styled.button`
   }
 `;
 
-const Link = styled.a`
+const LinkContainer = styled.span`
   margin: 5px 0px;
   font-size: 12px;
   text-decoration: underline;
@@ -76,7 +77,7 @@ const Login = () => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    dispatch(login({username,password}))
+    dispatch(login({ username, password }))
   };
   return (
     <Container>
@@ -96,8 +97,10 @@ const Login = () => {
             LOGIN
           </Button>
           {error && <Error>Something went wrong...</Error>}
-          <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-          <Link>CREATE A NEW ACCOUNT</Link>
+          <LinkContainer>DO NOT YOU REMEMBER THE PASSWORD?</LinkContainer>
+          <LinkContainer>
+            <Link to='/register'>CREATE A NEW ACCOUNT</Link>
+          </LinkContainer>
         </Form>
       </Wrapper>
     </Container>
