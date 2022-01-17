@@ -89,6 +89,9 @@ const Navbar = () => {
           </Link>
         </Center>
         <Right>
+          <Link to="/product/add">
+            <MenuItem>ADD PRODUCT</MenuItem>
+          </Link>
           <Link to="/register">
             <MenuItem>REGISTER</MenuItem>
           </Link>

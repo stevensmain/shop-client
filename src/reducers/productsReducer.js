@@ -9,15 +9,6 @@ const initialState = {
 export const productsReducer = (state = initialState, action) => {
 
     switch (action.type) {
-
-        case types.addProduct:
-            return {
-                ...state,
-                quantity: state.quantity + 1,
-                products: action.payload,
-                total: state.total + action.payload.price * action.payload.quantity
-            }
-
         //DELETE
         case types.deleteProductStart:
             return {
@@ -82,6 +73,28 @@ export const productsReducer = (state = initialState, action) => {
             }
 
         case types.updateProductFailure:
+            return {
+                ...state,
+                isFetching: false,
+                error: true
+            }
+
+        //ADD
+        case types.addProductStart:
+            return {
+                ...state,
+                isFetching: true,
+                error: false
+            }
+
+        case types.addProductSuccess:
+            return {
+                ...state,
+                isFetching: false,
+                products: [...state.products, action.payload]
+            }
+
+        case types.addProductFailure:
             return {
                 ...state,
                 isFetching: false,

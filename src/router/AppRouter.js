@@ -16,6 +16,9 @@ const AppRouter = () => {
                 <Route exact path="/">
                     <Home />
                 </Route>
+                <Route path="/product/add">
+                    <NewProduct />
+                </Route>
                 <Route path="/product/edit/:id">
                     <NewProduct />
                 </Route>

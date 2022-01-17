@@ -18,6 +18,10 @@ export const types = {
 
     updateProductStart: '[products] Update product start',
     updateProductSuccess: '[products] Update product success',
-    updateProductFailure: '[products] Update product failure'
+    updateProductFailure: '[products] Update product failure',
+
+    addProductStart: '[products] add product start',
+    addProductSuccess: '[products] add product success',
+    addProductFailure: '[products] add product failure'
     
 }

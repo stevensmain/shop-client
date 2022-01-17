@@ -1,12 +1,6 @@
 import { publicRequest, userRequest } from '../requestMethods';
 import { types } from '../types/types';
 
-export const addProduct = (products) => ({
-    type: types.addProduct,
-    payload: products
-})
-
-
 export const deleteProduct = (id) => {
     return (dispatch) => {
         dispatch(deleteProductStart())
@@ -64,20 +58,42 @@ export const updateProduct = (id, product) => {
     return (dispatch) => {
         dispatch(updateProductStart())
         userRequest.put(`/products/${id}`)
-            .then(() => dispatch(updateProductSuccess({id, product})))
+            .then(() => dispatch(updateProductSuccess({ id, product })))
             .catch(() => dispatch(updateProductFailure()))
     }
-  };
+};
 
-    const updateProductStart = () => ({
-        type: types.updateProductStart
-    })
-    
-    const updateProductSuccess = (updated) => ({
-        type: types.updateProductSuccess,
-        payload: updated
-    })
-    
-    const updateProductFailure = () => ({
-        type: types.updateProductFailure
-    })
+const updateProductStart = () => ({
+    type: types.updateProductStart
+})
+
+const updateProductSuccess = (updated) => ({
+    type: types.updateProductSuccess,
+    payload: updated
+})
+
+const updateProductFailure = () => ({
+    type: types.updateProductFailure
+})
+
+export const addProduct = (product) => {
+    return (dispatch) => {
+        dispatch(addProductStart())
+        userRequest.post(`/products`, product)
+            .then((res) => dispatch(addProductSuccess(res.data)))
+            .catch(() => dispatch(addProductFailure()))
+    }
+};
+
+const addProductStart = () => ({
+    type: types.addProductStart
+})
+
+const addProductSuccess = (product) => ({
+    type: types.addProductSuccess,
+    payload: product
+})
+
+const addProductFailure = () => ({
+    type: types.addProductFailure
+})

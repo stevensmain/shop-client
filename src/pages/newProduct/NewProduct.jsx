@@ -1,43 +1,45 @@
 import { useState, useEffect } from "react";
 import "./newProduct.css";
+import FileBase64 from 'react-file-base64';
 import { useDispatch } from "react-redux";
 import { publicRequest } from "../../requestMethods";
 import { useParams, useHistory } from "react-router-dom";
-import { updateProduct } from "../../actions/products";
+import { updateProduct, addProduct } from "../../actions/products";
 
 export default function NewProduct() {
   let { id } = useParams();
   let history = useHistory();
   const [product, setProduct] = useState({});
   const [cat, setCat] = useState([]);
+  const [file, setFile] = useState(null);
   const [formValue, setFormValue] = useState({
     title: '',
     desc: '',
     price: 0,
-    inStock: true,
-})
-const dispatch = useDispatch();
+    inStock: true
+  })
+  const dispatch = useDispatch();
 
-useEffect(() => {
-  const getProduct = async () => {
-    try {
-      const res = await publicRequest.get("/products/find/" + id);
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const res = await publicRequest.get("/products/find/" + id);
         await setProduct(res.data);
         setFormValue({
-          ...formValue, 
-          title:res.data.title,
+          ...formValue,
+          title: res.data.title,
           desc: res.data.desc,
           price: res.data.price,
           inStock: res.data.inStock
         })
       } catch { }
     };
-    getProduct();
+    id !== undefined && getProduct();
   }, [id]);
-  
+
   const handleChange = ({ target }) => {
-      const { name, value } = target
-      setFormValue({ ...formValue, [name]: value })
+    const { name, value } = target
+    setFormValue({ ...formValue, [name]: value })
   }
   const handleCat = (e) => {
     setCat(e.target.value.split(","));
@@ -45,14 +47,27 @@ useEffect(() => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    await dispatch(updateProduct(id, {
-      ...product,
-      title: formValue.title,
-      desc: formValue.desc,
-      price: formValue.price,
-      inStock: formValue.inStock,
-      cat: cat
-    }))
+
+    id
+      ? await dispatch(updateProduct(id, {
+        ...product,
+        title: formValue.title,
+        desc: formValue.desc,
+        price: formValue.price,
+        inStock: formValue.inStock,
+        cat: cat
+      }))
+
+      : await dispatch(addProduct({
+        title: formValue.title,
+        desc: formValue.desc,
+        price: formValue.price,
+        inStock: formValue.inStock,
+        cat: cat,
+        img: file
+      }))
+
+
     history.replace('/')
   };
 
@@ -60,6 +75,20 @@ useEffect(() => {
     <div className="newProduct">
       <h1 className="addProductTitle">Edit Product</h1>
       <form className="addProductForm">
+        {
+          id === undefined
+
+          &&
+
+          <div className="addProductItem">
+            <label>Image</label>
+            <FileBase64
+              type="file"
+              multiple={false}
+              onDone={({ base64 }) => setFile(base64)}
+            />
+          </div>
+        }
         <div className="addProductItem">
           <label>Title</label>
           <input
@@ -101,9 +130,18 @@ useEffect(() => {
             <option value="false">No</option>
           </select>
         </div>
-        <button onClick={handleClick} className="addProductButton">
-          Update
-        </button>
+        {
+
+          id === undefined
+            ?
+            <button onClick={handleClick} className="addProductButton">
+              Create
+            </button>
+            :
+            <button onClick={handleClick} className="addProductButton">
+              Update
+            </button>
+        }
       </form>
     </div>
   );
