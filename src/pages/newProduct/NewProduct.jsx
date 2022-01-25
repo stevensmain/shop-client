@@ -76,7 +76,6 @@ export default function NewProduct() {
         img: file
       }))
 
-    console.log(formValue)
     history.replace('/')
   };
 

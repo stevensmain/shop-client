@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { categories } from "../data";
+import { publicRequest } from "../requestMethods";
 import { mobile } from "../responsive";
 import CategoryItem from "./CategoryItem";
 
@@ -13,7 +14,19 @@ const Container = styled.div`
 
 const Categories = ({ search }) => {
 
-  const filtredCategories = categories.filter(category =>
+  const [cats, setCats] = useState([]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const res = await publicRequest.get("/categories");
+        setCats(res.data);
+      } catch (error){ console.log(error)}
+    };
+    getCategories();
+  }, []);
+
+  const filtredCategories = cats.filter(category =>
     category.cat.toLowerCase().includes(search.toLowerCase())
   )
 
