@@ -21,10 +21,7 @@ export const productsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isFetching: false,
-                products: state.products.splice(
-                    state.products.findIndex((item) => item._id === action.payload),
-                    1
-                )
+                products: state.products.filter( product=> product._id !== action.payload)
             }
         case types.deleteProductFailure:
             return {

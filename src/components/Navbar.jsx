@@ -40,6 +40,10 @@ const SearchContainer = styled.div`
 const Input = styled.input`
   border: none;
   ${mobile({ width: "50px" })}
+
+  &:focus{
+    outline: none;
+  }
 `;
 
 const Center = styled.div`
@@ -72,14 +76,14 @@ const MenuItem = styled.div`
   ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `;
 
-const Navbar = () => {
+const Navbar = ({setSearch, search}) => {
   return (
     <Container>
       <Wrapper>
         <Left>
           <Language>EN</Language>
           <SearchContainer>
-            <Input placeholder="Search" />
+            <Input placeholder="Search" onChange={(e) => setSearch(e.target.value)} value={search}/>
             <Search style={{ color: "gray", fontSize: 16 }} />
           </SearchContainer>
         </Left>

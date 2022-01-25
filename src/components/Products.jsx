@@ -11,9 +11,13 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const Products = ({ cat, filters, sort }) => {
+const Products = ({ cat, filters, sort, search }) => {
   const { products } = useSelector((state) => state.products);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const searchProducts = products.filter(product =>
+    product.title.toLowerCase().includes(search.toLowerCase()) ||
+    product.categories.toString().toLowerCase().includes(search.toLowerCase())
+  )
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,7 +57,7 @@ const Products = ({ cat, filters, sort }) => {
     <Container>
       {cat
         ? filteredProducts.map((item) => <Product item={item} key={item.id} />)
-        : products
+        : searchProducts
             .slice(0, 8)
             .map((item) => <Product item={item} key={item.id} />)}
     </Container>

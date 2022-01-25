@@ -10,15 +10,26 @@ export default function NewProduct() {
   let { id } = useParams();
   let history = useHistory();
   const [product, setProduct] = useState({});
-  const [cat, setCat] = useState([]);
+  const [cats, setCats] = useState([]);
   const [file, setFile] = useState(null);
   const [formValue, setFormValue] = useState({
     title: '',
     desc: '',
     price: 0,
-    inStock: true
+    inStock: true,
+    categories: ['t-shirt']
   })
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const res = await publicRequest.get("/categories");
+        setCats(res.data);
+      } catch { }
+    };
+    getCategories();
+  }, []);
 
   useEffect(() => {
     const getProduct = async () => {
@@ -41,9 +52,7 @@ export default function NewProduct() {
     const { name, value } = target
     setFormValue({ ...formValue, [name]: value })
   }
-  const handleCat = (e) => {
-    setCat(e.target.value.split(","));
-  };
+
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -55,7 +64,7 @@ export default function NewProduct() {
         desc: formValue.desc,
         price: formValue.price,
         inStock: formValue.inStock,
-        cat: cat
+        categories: formValue.categories
       }))
 
       : await dispatch(addProduct({
@@ -63,27 +72,26 @@ export default function NewProduct() {
         desc: formValue.desc,
         price: formValue.price,
         inStock: formValue.inStock,
-        cat: cat,
+        categories: formValue.categories,
         img: file
       }))
 
-
+    console.log(formValue)
     history.replace('/')
   };
 
   return (
     <div className="newProduct">
-      <h1 className="addProductTitle">Edit Product</h1>
+      <h1 className="addProductTitle">{id ? "Edit Product" : "Create Product"}</h1>
       <form className="addProductForm">
         {
-          id === undefined
+          !id
 
           &&
 
           <div className="addProductItem">
             <label>Image</label>
             <FileBase64
-              type="file"
               multiple={false}
               onDone={({ base64 }) => setFile(base64)}
             />
@@ -121,13 +129,22 @@ export default function NewProduct() {
         </div>
         <div className="addProductItem">
           <label>Categories</label>
-          <input type="text" placeholder="jeans,skirts" onChange={handleCat} />
+          <select name="cat"
+            onChange={(e) => setFormValue((prev) => prev = { ...prev, categories: [e.target.value] })}
+            value={formValue.categories}
+          >
+            {
+              cats.map((cat,index) => (
+                <option key={index} value={cat.cat}>{cat.cat}</option>
+              ))
+            }
+          </select>
         </div>
         <div className="addProductItem">
           <label>Stock</label>
           <select name="inStock" onChange={handleChange} value={formValue.inStock}>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
+            <option value={true}>Yes</option>
+            <option value={false}>No</option>
           </select>
         </div>
         {

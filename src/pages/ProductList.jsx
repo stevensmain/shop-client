@@ -3,8 +3,9 @@ import Navbar from "../components/Navbar";
 import Products from "../components/Products";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
-import { useLocation } from "react-router";
-import { useState } from "react";
+import { useLocation, useHistory } from "react-router";
+import { useEffect, useState } from "react";
+import { publicRequest } from "../requestMethods";
 
 const Container = styled.div``;
 
@@ -38,9 +39,25 @@ const Option = styled.option``;
 
 const ProductList = () => {
   const location = useLocation();
+  const history = useHistory();
   const cat = location.pathname.split("/")[2];
+  const [cats, setCats] = useState([]);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState("newest");
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const res = await publicRequest.get("/categories");
+        setCats(res.data);
+      } catch { }
+    };
+    getCategories();
+  }, []);
+
+  const handleChange = (e) => {
+    history.replace(`/products/${e.target.value}`)
+  };
 
   const handleFilters = (e) => {
     const value = e.target.value;
@@ -73,6 +90,16 @@ const ProductList = () => {
             <Option>M</Option>
             <Option>L</Option>
             <Option>XL</Option>
+          </Select>
+        </Filter>
+        <Filter>
+          <FilterText>Category:</FilterText>
+          <Select onChange={handleChange}>
+            {
+              cats.map((cat) => (
+                <Option value={cat.cat}>{cat.cat}</Option>
+              ))
+            }
           </Select>
         </Filter>
         <Filter>

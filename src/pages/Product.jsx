@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { deleteProduct } from "../actions/products";
 import { useDispatch } from "react-redux";
 import { publicRequest } from "../requestMethods";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 const Container = styled.div``;
 
@@ -36,6 +36,10 @@ const InfoContainer = styled.div`
 
 const Title = styled.h1`
   font-weight: 200;
+`;
+
+const Category = styled.h2`
+  font-weight: 600;
 `;
 
 const Desc = styled.p`
@@ -102,6 +106,7 @@ const Button = styled.button`
 
 const Product = () => {
   let { id } = useParams();
+  const history = useHistory();
   const [product, setProduct] = useState({});
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
@@ -118,9 +123,8 @@ const Product = () => {
   }, [id]);
 
   const handleClick = () => {
-    dispatch(
-      deleteProduct(id)
-    );
+    dispatch(deleteProduct(id))
+    history.replace('/')
   };
   return (
     <Container>
@@ -131,6 +135,7 @@ const Product = () => {
         </ImgContainer>
         <InfoContainer>
           <Title>{product.title}</Title>
+          <Category>{product.categories}</Category>
           <Desc>{product.desc}</Desc>
           <Price>$ {product.price}</Price>
           <FilterContainer>
