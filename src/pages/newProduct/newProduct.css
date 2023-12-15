@@ -14,17 +14,17 @@
   margin-bottom: 10px;
 }
 
-.addProductItem > label {
+.addProductItem>label {
   color: gray;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
-.addProductItem > input {
+.addProductItem>input {
   padding: 10px;
 }
 
-.addProductItem > select {
+.addProductItem>select {
   padding: 10px;
 }
 
